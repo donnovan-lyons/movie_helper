@@ -19,4 +19,6 @@ movie_helper asks them how it can assist them to find a movie to watch.
 An option is selected.
 Movie movie_helper lists the movies and provides the necessary information.
 
-Step 2:
+What is a movie?
+
+A movie has a: title, a review, moods, starring, rating, language.
