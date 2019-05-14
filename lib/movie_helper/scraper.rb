@@ -1,16 +1,12 @@
-class MovieHelper::Movie
-  attr_accessor :title, :year, :watch_with, :watch_when, :genre, :review, :stars, :rating, :language, :url
+class MovieHelper::Scraper
 
-  @@best_films = []
-  @@latest = []
-
-  def self.scrape_movie(link)
+  def scrape_movie(link)
     doc = Nokogiri::HTML(open(link))
 
-    movie = self.new
+    movie = MovieHelper::Movie.new
 
     movie.title = doc.css("h1").children.first.text.strip
-    # movie.year = doc.css("h1 span.movieyear").first.text
+    movie.year = doc.css("h1 span.movieyear").first.text
     movie.watch_with = doc.css("span[title='More movies to watch with']").children.text.strip
     movie.watch_when = doc.css("span[title='More movies to watch when']").children.text.strip
     movie.genre = doc.css("span[itemprop='genre']").children.text.strip
@@ -23,39 +19,21 @@ class MovieHelper::Movie
     movie
   end
 
-  def self.random
-    scrape_movie("https://agoodmovietowatch.com/random/")
+  def make_movies(movie_links)
+    movie_links.each {|movie_link| scrape_movie(movie_link)}
   end
 
-  def self.scrape_best_films
+  def scrape_best_films
     doc = Nokogiri::HTML(open("https://agoodmovietowatch.com/best/"))
     links = doc.css("h3").map {|movie| movie.elements.first.first.last}
-    @@best_films = links.map {|movie_link| self.scrape_movie(movie_link)}
+    make_movies(links)
   end
 
-  def self.best_films
-    @@best_films
-  end
-
-  def self.scrape_latest
+  def scrape_latest
     doc = Nokogiri::HTML(open("https://agoodmovietowatch.com/all/new/"))
     links = doc.css(".entry-title").map {|movie| movie.elements.first.first.last}
-    @@latest = links.map {|movie_link| self.scrape_movie(movie_link)}
+    best = links.map {|movie_link| self.scrape_movie(movie_link)}
   end
 
-  def self.latest
-    @@latest
-  end
-
-  def display
-    puts "Title: #{self.title} (#{self.year})"
-    puts "Watch with #{self.watch_with}"
-    puts "Watch when #{self.watch_when}"
-    puts "Genre: #{self.genre}"
-    puts "Selected review: #{self.review}"
-    puts "Movie stars: #{self.stars}"
-    puts "Movie rating: #{self.rating}"
-    puts "Language: #{self.language}"
-  end
 
 end
