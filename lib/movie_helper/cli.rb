@@ -3,7 +3,6 @@ class MovieHelper::CLI
   def call
     greeting
     load
-    # binding.pry
     list_options
     goodbye
   end
@@ -15,9 +14,11 @@ class MovieHelper::CLI
   end
 
   def load
-    MovieHelper::Movie.scrape_best_films
+    best_films = MovieHelper::Scraper.best_films
+    MovieHelper::Movie.create_best_films(best_films)
     puts "...50%..."
-    MovieHelper::Movie.scrape_latest
+    latest_films = MovieHelper::Scraper.latest
+    MovieHelper::Movie.create_latest(latest_films)
     puts "...Complete."
     puts ""
   end
@@ -50,8 +51,11 @@ class MovieHelper::CLI
   end
 
   def random
+    puts "One moment while we randomize your movie..."
+    movie_hash = MovieHelper::Scraper.random
+    movie = MovieHelper::Movie.new(movie_hash)
+    puts ""
     puts "Your random movie is:"
-    movie = MovieHelper::Movie.random
     puts movie.title
     more_info(movie)
     satisfaction_check
@@ -126,7 +130,7 @@ class MovieHelper::CLI
     else
       puts "Would you like to try again?"
       new_input = gets.chomp.downcase
-      if new_input == "yes" || input == "y"
+      if new_input == "yes" || new_input == "y"
         list_options
       else
         return
