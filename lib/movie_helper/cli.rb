@@ -51,7 +51,7 @@ class MovieHelper::CLI
   end
 
   def random
-    puts "One moment while we randomize your movie..."
+    puts "One moment while we randomly select your movie..."
     movie_hash = MovieHelper::Scraper.random
     movie = MovieHelper::Movie.new(movie_hash)
     puts ""
