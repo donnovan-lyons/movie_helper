@@ -1,8 +1,6 @@
-# MovieHelper
+# Movie Helper
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/movie_helper`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Welcome to the Movie Helper gem!
 
 ## Installation
 
@@ -22,7 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+To run this gem, cd into the file and run `ruby bin/movie-helper`, and it will automatically scrape the data for use in the Command Line Interface.
 
 ## Development
 
