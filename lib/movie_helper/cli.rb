@@ -16,7 +16,7 @@ class MovieHelper::CLI
   def load
     best_films = MovieHelper::Scraper.best_films
     MovieHelper::Movie.create_best_films(best_films)
-    puts "...50%..."
+    puts "...47%..."
     latest_films = MovieHelper::Scraper.latest
     MovieHelper::Movie.create_latest(latest_films)
     puts "...Complete."
@@ -71,7 +71,7 @@ class MovieHelper::CLI
     puts "To return to the main menu, please type 'list'"
 
     input = gets.chomp
-    if input != "list"
+    if input.to_i.between?(1, movies.count)
       input = input.to_i - 1
       more_info(movies[input])
     else
@@ -90,7 +90,7 @@ class MovieHelper::CLI
     puts "To return to the main menu, please type 'list'"
 
     input = gets.chomp
-    if input != "list"
+    if input.to_i.between?(1, movies.count)
       input = input.to_i - 1
       more_info(movies[input])
     else
@@ -113,13 +113,6 @@ class MovieHelper::CLI
     end
   end
 
-  def more_info_in_array(movies)
-    puts "Would you like more information about this movie?"
-    puts "Type Y to get more information, or list to go back to the main menu."
-  end
-
-
-
   def satisfaction_check
     puts "Are you satisfied with your movie choice?"
 
@@ -132,13 +125,11 @@ class MovieHelper::CLI
       new_input = gets.chomp.downcase
       if new_input == "yes" || new_input == "y"
         list_options
-      else
-        return
       end
     end
   end
 
   def goodbye
-    puts "Thank you for your using Movie Helper! Enjoy your movie!"
+    puts "Thank you for your using Movie Helper!"
   end
 end
