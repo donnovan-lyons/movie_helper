@@ -2,6 +2,7 @@ class MovieHelper::CLI
 
   def call
     greeting
+    binding.pry
     load
     list_options
     goodbye

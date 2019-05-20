@@ -2,7 +2,7 @@ class MovieHelper::Scraper
 
   def self.scrape_movie(link)
     doc = Nokogiri::HTML(open(link))
-    
+
     hash = {}
 
     hash[:title] = doc.css("h1").children.first.text.strip
@@ -33,7 +33,14 @@ class MovieHelper::Scraper
 
   def self.latest
     doc = Nokogiri::HTML(open("https://agoodmovietowatch.com/all/new/"))
-    links = doc.css(".entry-title").map {|movie| movie.elements.first.first.last}
+    links = doc.css(".entry-title").map do |movie|
+      if movie.elements.first == nil
+        nil
+      else
+        movie.elements.first.first.last
+      end
+    end
+    links.delete(nil)
     latest = links.map {|movie_link| scrape_movie(movie_link)}
   end
 
