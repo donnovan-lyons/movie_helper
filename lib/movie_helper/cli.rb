@@ -1,9 +1,5 @@
 class MovieHelper::CLI
 
-# Change the flow so that no scraping happens up front ...
-# Instead, scrape only the moveis requested by the user
-# Once a set or category is chosen, it should not be scraped again on a subsequent like choice
-
   def call
     greeting
     list_options
