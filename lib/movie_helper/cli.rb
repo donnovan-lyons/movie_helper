@@ -6,7 +6,6 @@ class MovieHelper::CLI
 
   def call
     greeting
-    # load
     list_options
     satisfaction_check
     goodbye
@@ -15,16 +14,6 @@ class MovieHelper::CLI
   def greeting
     puts "Welcome to Movie Helper!"
     puts
-  end
-
-  def load
-    best_films = MovieHelper::Scraper.best_films
-    MovieHelper::Movie.create_best_films(best_films)
-    puts "...50%..."
-    latest_films = MovieHelper::Scraper.latest
-    MovieHelper::Movie.create_latest(latest_films)
-    puts "...Complete."
-    puts ""
   end
 
   def list_options
@@ -65,7 +54,6 @@ class MovieHelper::CLI
     puts movie.title
     puts ""
     more_info(movie)
-    # satisfaction_check
   end
 
   def best_films
@@ -99,7 +87,6 @@ class MovieHelper::CLI
     else
       information(movies)
     end
-    # satisfaction_check
   end
 
   def latest_suggestions
@@ -120,7 +107,6 @@ class MovieHelper::CLI
   def more_info(movie)
     puts "Would you like more information about this movie?"
     puts "Type Y to get more information, or list to go back to the main menu."
-    # binding.pry
     input = gets.chomp
     if input.upcase == "Y"
       display(movie)
@@ -143,12 +129,13 @@ class MovieHelper::CLI
   end
 
   def satisfaction_check
-    puts "Are you satisfied with your movie choice?"
-    input = gets.chomp.downcase
-    if input == "yes" || input == "y"
-      return
-    elsif input == "no" || input == "n"
-      try_again
+    input = nil
+    until input == "yes" ||input == "y"
+      puts "Are you satisfied with your movie choice?"
+      input = gets.chomp.downcase
+      if input == "no" || input == "n"
+        try_again
+      end
     end
   end
 
