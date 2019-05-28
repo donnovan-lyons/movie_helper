@@ -130,7 +130,7 @@ class MovieHelper::CLI
       puts "Are you satisfied with your movie choice?"
       input = gets.chomp.downcase
       if input == "no" || input == "n"
-        try_again
+        input = try_again
       end
     end
   end
@@ -141,6 +141,7 @@ class MovieHelper::CLI
     if input == "yes" || input == "y"
       list_options
     elsif input == "no" || input == "n"
+      "yes"
     else
       try_again
     end
