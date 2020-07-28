@@ -4,25 +4,25 @@ class MovieHelper::Scraper
     doc = Nokogiri::HTML(open(link))
 
     hash = {}
-
-    hash[:title] = doc.css("h1").children.first.text.strip
-    if doc.css("h1 span.movieyear").first != nil
-      hash[:year] = doc.css("h1 span.movieyear").first.text
-    end
-    hash[:watch_with] = doc.css("span[title='More movies to watch with']").children.text.strip
-    hash[:watch_when] = doc.css("span[title='More movies to watch when']").children.text.strip
+    
+    hash[:title] = doc.css("span.content-title").children.text.strip
+    hash[:year] = doc.css("span.single-year").children.text.strip
+    hash[:summary] = doc.css("div.wc-comment-text").children.text.strip
     hash[:genre] = doc.css("span[itemprop='genre']").children.text.strip
-    hash[:review] = doc.css(".review-block span p").text
-    hash[:stars] = doc.css("#agmtw-opened li.meta-item div.infom span").first.children.text
-    #e.g. for individual actor/actress: doc.css("#agmtw-opened li.meta-item div.infom span").first.children.first.attributes.first.last.value
-    hash[:rating] = doc.css("span[itemprop='contentRating']").children.text.strip
-    hash[:language] = doc.css("span[title='More from the language']").children.text.strip
+    if doc.css("div.infom span").count > 1
+      hash[:mood] = doc.css("div.infom span")[1].text.strip
+      hash[:actors] = doc.css("div.infom span")[2].text.strip
+      hash[:director] = doc.css("div.infom span")[3].text.strip
+      hash[:language] = doc.css("div.infom span")[4].text.strip
+    end
     hash[:url] = link
 
-    if category == "best"
-      hash[:is_best] =  true
-    elsif category == "latest"
-      hash[:is_latest] = true
+    if category == "netflix"
+      hash[:is_netflix] =  true
+    elsif category == "amazon"
+      hash[:is_amazon] = true
+    elsif category == "elsewhere"
+      hash[:is_elsewhere] = true
     end
 
     hash
@@ -32,23 +32,22 @@ class MovieHelper::Scraper
     scrape_movie("https://agoodmovietowatch.com/random/", nil)
   end
 
-  def self.best_films
-    doc = Nokogiri::HTML(open("https://agoodmovietowatch.com/best/"))
-    links = doc.css("h3").map {|movie| movie.elements.first.first.last}
-    best = links.map {|movie_link| scrape_movie(movie_link, "best")}
+  def self.latest_netflix
+    doc = Nokogiri::HTML(open("https://agoodmovietowatch.com/all/?on=USA-netflix&by=new"))
+    links = doc.css("span.content-title").map {|movie| movie.css("a").first.first.last}
+    best = links.map {|movie_link| scrape_movie(movie_link, "netflix")}
   end
 
-  def self.latest
-    doc = Nokogiri::HTML(open("https://agoodmovietowatch.com/all/new/"))
-    links = doc.css(".entry-title").map do |movie|
-      if movie.elements.first == nil
-        nil
-      else
-        movie.elements.first.first.last
-      end
-    end
-    links.delete(nil)
-    latest = links.map {|movie_link| scrape_movie(movie_link, "latest")}
+  def self.latest_amazon
+    doc = Nokogiri::HTML(open("https://agoodmovietowatch.com/all/?on=USA-amazon-prime&by=new"))
+    links = doc.css("span.content-title").map {|movie| movie.css("a").first.first.last}
+    best = links.map {|movie_link| scrape_movie(movie_link, "amazon")}
+  end
+
+  def self.latest_elsewhere
+    doc = Nokogiri::HTML(open("https://agoodmovietowatch.com/all/?by=new"))
+    links = doc.css("span.content-title").map {|movie| movie.css("a").first.first.last}
+    best = links.map {|movie_link| scrape_movie(movie_link, "elsewhere")}
   end
 
 

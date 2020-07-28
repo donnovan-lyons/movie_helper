@@ -1,5 +1,5 @@
 class MovieHelper::Movie
-  attr_accessor :title, :year, :watch_with, :watch_when, :genre, :review, :stars, :rating, :language, :url, :is_latest, :is_best
+  attr_accessor :title, :year, :summary, :genre, :mood, :actors, :director, :language, :language, :url, :is_netflix, :is_amazon, :is_elsewhere
 
   @@all = []
 
@@ -18,12 +18,16 @@ class MovieHelper::Movie
     @@all
   end
 
-  def self.best_films
-    @@all.select {|movie| movie.is_best == true}
+  def self.latest_netflix
+    @@all.select {|movie| movie.is_netflix == true}
   end
 
-  def self.latest
-    @@all.select {|movie| movie.is_latest == true}
+  def self.latest_amazon
+    @@all.select {|movie| movie.is_amazon == true}
+  end
+
+  def self.latest_elsewhere
+    @@all.select {|movie| movie.is_elsewhere == true}
   end
 
 

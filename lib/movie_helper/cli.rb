@@ -17,9 +17,10 @@ class MovieHelper::CLI
     puts ""
     puts "Please select an option below:"
     puts "1. Random"
-    puts "2. Best Films"
-    puts "3. Latest Suggestions"
-    puts "4. Exit"
+    puts "2. Latest on Netflix"
+    puts "3. Latest on Amazon"
+    puts "4. Latest Elsewhere"
+    puts "5. Exit"
     selector
   end
 
@@ -29,10 +30,12 @@ class MovieHelper::CLI
     when "1"
       random
     when "2"
-      best_films
+      latest_netflix
     when "3"
-      latest_suggestions
-    when "4" || "exit" || "quit"
+      latest_amazon
+    when "4"
+      latest_elsewhere
+    when "5" || "exit" || "quit"
     else
       puts "Invalid request."
       puts ""
@@ -52,22 +55,50 @@ class MovieHelper::CLI
     more_info(movie)
   end
 
-  def best_films
-
-    if MovieHelper::Movie.best_films.empty?
+  def latest_netflix
+    if MovieHelper::Movie.latest_netflix.empty?
       puts "Loading..."
-      best_films = MovieHelper::Scraper.best_films
-      MovieHelper::Movie.create_from_list(best_films)
+      latest_netflix_films = MovieHelper::Scraper.latest_netflix
+      MovieHelper::Movie.create_from_list(latest_netflix_films)
       puts ""
     end
-    puts "Here is a list of our best films:"
-    movies = MovieHelper::Movie.best_films
+    puts "Here are our latest Netflix films:"
+    movies = MovieHelper::Movie.latest_netflix
     movies.each.with_index do |movie, i|
       puts "#{i+1}. #{movie.title}"
     end
     information(movies)
   end
 
+  def latest_amazon
+    if MovieHelper::Movie.latest_amazon.empty?
+      puts "Loading..."
+      latest_amazon_films = MovieHelper::Scraper.latest_amazon
+      MovieHelper::Movie.create_from_list(latest_amazon_films)
+      puts ""
+    end
+    puts "Here are our latest Amazon films:"
+    movies = MovieHelper::Movie.latest_amazon
+    movies.each.with_index do |movie, i|
+      puts "#{i+1}. #{movie.title}"
+    end
+    information(movies)
+  end
+
+  def latest_elsewhere
+    if MovieHelper::Movie.latest_elsewhere.empty?
+      puts "Loading..."
+      latest_elsewhere_films = MovieHelper::Scraper.latest_elsewhere
+      MovieHelper::Movie.create_from_list(latest_elsewhere_films)
+      puts ""
+    end
+    puts "Here are our latest films:"
+    movies = MovieHelper::Movie.latest_elsewhere
+    movies.each.with_index do |movie, i|
+      puts "#{i+1}. #{movie.title}"
+    end
+    information(movies)
+  end
 
   def information(movies)
     puts ""
@@ -85,20 +116,7 @@ class MovieHelper::CLI
     end
   end
 
-  def latest_suggestions
-    if MovieHelper::Movie.latest.empty?
-      puts "Loading..."
-      latest_films = MovieHelper::Scraper.latest
-      MovieHelper::Movie.create_from_list(latest_films)
-      puts ""
-    end
-    puts "Here are some of our latest suggestions:"
-    movies = MovieHelper::Movie.latest
-    movies.each.with_index do |movie, i|
-      puts "#{i+1}. #{movie.title}"
-    end
-    information(movies)
-  end
+  
 
   def more_info(movie)
     puts "Would you like more information about this movie?"
@@ -115,12 +133,11 @@ class MovieHelper::CLI
 
   def display(movie)
     puts "Title: #{movie.title} (#{movie.year})"
-    puts "Watch with #{movie.watch_with}"
-    puts "Watch when #{movie.watch_when}"
+    puts "Summary: #{movie.summary}"
     puts "Genre: #{movie.genre}"
-    puts "Selected review: #{movie.review}"
-    puts "Movie stars: #{movie.stars}"
-    puts "Movie rating: #{movie.rating}"
+    puts "Mood: #{movie.mood}"
+    puts "Movie actors: #{movie.actors}"
+    puts "Movie director: #{movie.director}"
     puts "Language: #{movie.language}"
   end
 
